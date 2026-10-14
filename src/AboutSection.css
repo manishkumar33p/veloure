@@ -1,0 +1,494 @@
+
+.vl-about {
+  --vl-black: #fbf8f2;
+  --vl-gold: #c9a66b;
+  --vl-cream: #030303;
+  --vl-muted: #a9a094;
+  background: var(--vl-black);
+  color: var(--vl-cream);
+  font-family: inherit;
+  overflow: hidden;
+}
+
+.vl-about * {
+  box-sizing: border-box;
+}
+
+.vl-about-intro,
+.vl-product-section,
+.vl-testimonials,
+.vl-transform-section {
+  max-width: 1180px;
+  margin: auto;
+  padding: 85px 28px;
+}
+
+.vl-eyebrow {
+  display: inline-block;
+  color: var(--vl-gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.8;
+}
+
+.vl-about h2 {
+  margin: 14px 0 22px;
+  font-size: clamp(30px, 4.4vw, 53px);
+  font-weight: 500;
+  letter-spacing: -1.4px;
+  line-height: 1.15;
+}
+
+.vl-about h2 em,
+.vl-about h3 em {
+  color: var(--vl-gold);
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.vl-about-intro {
+  text-align: center;
+  padding-top: 95px;
+  padding-bottom: 70px;
+}
+
+.vl-about-intro > p,
+.vl-transform-heading > p,
+.vl-about-closing > p {
+  max-width: 690px;
+  margin: 0 auto;
+  color: var(--vl-muted);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.vl-about-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 58px;
+}
+
+.vl-about-values > div {
+  padding: 28px 16px;
+  border-top: 1px solid #4c3b28;
+  border-bottom: 1px solid #4c3b28;
+}
+
+.vl-about-values > div > span {
+  color: var(--vl-gold);
+  font-family: Georgia, serif;
+  font-size: 26px;
+}
+
+.vl-about-values h3 {
+  margin: 15px 0 8px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.vl-about-values p {
+  margin: 0;
+  color: var(--vl-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.vl-product-section,
+.vl-transform-section {
+  border-top: 1px solid #3b3024;
+}
+
+.vl-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.vl-section-heading h2 {
+  margin-bottom: 0;
+}
+
+.vl-arrows {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.vl-arrows button {
+  width: 43px;
+  height: 43px;
+  border: 1px solid #806744;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--vl-gold);
+  font-size: 21px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.vl-arrows button:hover {
+  background: var(--vl-gold);
+  color: var(--vl-black);
+}
+
+.vl-featured-product {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  min-height: 390px;
+  border: 1px solid #42372a;
+  background: #211c16;
+}
+
+.vl-featured-image {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  background: #eee5d6;
+}
+
+.vl-featured-image img,
+.vl-photo-half img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vl-product-number {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  padding: 8px 12px;
+  background: #fbf8f2;
+  color: var(--vl-gold);
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.vl-featured-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(25px, 5vw, 60px);
+}
+
+.vl-featured-copy h3 {
+  margin: 17px 0 12px;
+  font-family: Georgia, serif;
+  font-size: clamp(27px, 3.5vw, 39px);
+  font-weight: 400;
+}
+
+.vl-featured-copy > p {
+  color: var(--vl-muted);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.vl-product-dots,
+.vl-review-dots {
+  display: flex;
+  gap: 9px;
+  margin-top: 25px;
+}
+
+.vl-product-dots button,
+.vl-review-dots button {
+  width: 25px;
+  height: 4px;
+  border: 0;
+  padding: 0;
+  background: #5b5042;
+  cursor: pointer;
+}
+
+.vl-product-dots button.active,
+.vl-review-dots button.active {
+  background: var(--vl-gold);
+}
+
+.vl-small-note {
+  margin-top: 22px;
+  font-size: 12px !important;
+}
+
+.vl-testimonials {
+  border-top: 1px solid #3b3024;
+}
+
+.vl-review-card {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 45px clamp(22px, 6vw, 65px);
+  border: 1px solid #59452d;
+  background: linear-gradient(135deg, #262017, #fbf8f2);
+  text-align: center;
+}
+
+.vl-review-stars {
+  color: var(--vl-gold);
+  font-size: 18px;
+  letter-spacing: 5px;
+}
+
+.vl-quote-mark {
+  display: block;
+  height: 55px;
+  margin-top: 10px;
+  color: var(--vl-gold);
+  font-family: Georgia, serif;
+  font-size: 76px;
+  line-height: 1;
+}
+
+.vl-review-card blockquote {
+  max-width: 540px;
+  margin: 12px auto 28px;
+  font-family: Georgia, serif;
+  font-size: clamp(20px, 3vw, 29px);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.vl-review-person {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  text-align: left;
+}
+
+.vl-avatar {
+  display: grid;
+  width: 43px;
+  height: 43px;
+  place-items: center;
+  border: 1px solid var(--vl-gold);
+  border-radius: 50%;
+  color: var(--vl-gold);
+  font-size: 12px;
+}
+
+.vl-review-person strong,
+.vl-review-person span {
+  display: block;
+}
+
+.vl-review-person strong {
+  font-size: 13px;
+}
+
+.vl-review-person span {
+  margin-top: 5px;
+  color: var(--vl-muted);
+  font-size: 12px;
+}
+
+.vl-demo-note {
+  margin: 24px 0 0;
+  color: #b6a58e;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.vl-review-dots {
+  justify-content: center;
+}
+
+.vl-transform-heading {
+  margin-bottom: 30px;
+}
+
+.vl-transform-heading > p {
+  margin-left: 0;
+}
+
+.vl-transform-card {
+  padding: clamp(18px, 4vw, 38px);
+  border: 1px solid #f7cee2;
+  background: #fbf8f2;
+}
+
+.vl-transform-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.vl-transform-top h3 {
+  margin: 8px 0 0;
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.vl-transform-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.vl-transform-tabs button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #6d5739;
+  background: transparent;
+  color: var(--vl-gold);
+  cursor: pointer;
+}
+
+.vl-transform-tabs button.active {
+  background: var(--vl-gold);
+  color: var(--vl-black);
+}
+
+.vl-before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.vl-photo-half {
+  position: relative;
+  height: clamp(200px, 35vw, 390px);
+  overflow: hidden;
+  background: #e9dfd0;
+}
+
+.vl-photo-label {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 8px 12px;
+  background: #fbf8f2;
+  color: var(--vl-gold);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.vl-transform-caption {
+  margin: 18px 0 0;
+  color: var(--vl-muted);
+  font-size: 13px;
+}
+
+.vl-about-closing {
+  padding: 75px 25px;
+  background: var(--vl-cream);
+  color: var(--vl-black);
+  text-align: center;
+}
+
+.vl-about-closing h2 {
+  max-width: 760px;
+  margin: 16px auto;
+}
+
+.vl-about-closing > p {
+  color: #030303;
+}
+
+.vl-image-placeholder {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: radial-gradient(circle, #fffaf0, #e3d3b9);
+  color: #8a6a3c;
+  text-align: center;
+}
+
+.vl-image-placeholder span {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  letter-spacing: 2px;
+}
+
+.vl-image-placeholder small {
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+  .vl-about-intro,
+  .vl-product-section,
+  .vl-testimonials,
+  .vl-transform-section {
+    padding: 55px 18px;
+  }
+
+  .vl-about-intro {
+    padding-top: 65px;
+  }
+
+  .vl-about-values {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 35px;
+  }
+
+  .vl-about-values > div {
+    padding: 20px 14px;
+  }
+
+  .vl-featured-product {
+    grid-template-columns: 1fr;
+  }
+
+  .vl-featured-image {
+    min-height: 290px;
+    height: 290px;
+  }
+
+  .vl-featured-copy {
+    padding: 28px 23px;
+  }
+
+  .vl-section-heading {
+    align-items: center;
+  }
+
+  .vl-section-heading h2 {
+    font-size: 29px;
+  }
+
+  .vl-arrows button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .vl-transform-top {
+    align-items: flex-start;
+  }
+
+  .vl-transform-top h3 {
+    font-size: 21px;
+  }
+
+  .vl-before-after {
+    gap: 6px;
+  }
+
+  .vl-photo-half {
+    height: 230px;
+  }
+
+  .vl-photo-label {
+    left: 6px;
+    bottom: 6px;
+    padding: 6px;
+    font-size: 9px;
+  }
+
+  .vl-review-card {
+    padding: 32px 20px;
+  }
+}
