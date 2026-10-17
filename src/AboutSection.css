@@ -251,3 +251,133 @@
   .vl-featured-product, .vl-review-card, .vl-routine-detail { animation: none; }
   .vl-product-dots button, .vl-review-dots button, .vl-routine-tabs button { transition: none; }
 }
+
+
+
+
+/* VELOURE LUX — Before & After section */
+.vl-before-after {
+  padding: 76px 6%;
+  background: linear-gradient(135deg, #fff7fb, #f4f7ff);
+  color: #172947;
+}
+
+.vl-before-after-heading {
+  max-width: 700px;
+  margin: 0 auto 38px;
+  text-align: center;
+}
+
+.vl-before-after-heading h2 {
+  margin: 12px 0;
+  font-size: clamp(32px, 4vw, 48px);
+  color: #172947;
+}
+
+.vl-before-after-heading h2 em {
+  color: #d982a5;
+  font-family: Georgia, serif;
+}
+
+.vl-before-after-heading p {
+  color: #626b7c;
+  line-height: 1.8;
+}
+
+.vl-before-after-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+.vl-ba-card {
+  overflow: hidden;
+  border: 1px solid #f0dce6;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(23, 41, 71, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.vl-ba-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 34px rgba(23, 41, 71, 0.13);
+}
+
+.vl-ba-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: #f7edf3;
+}
+
+.vl-ba-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vl-ba-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #172947;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.vl-ba-card h3 {
+  margin: 18px 16px 8px;
+  color: #172947;
+  font-size: 18px;
+}
+
+.vl-ba-card p {
+  margin: 0 16px 20px;
+  color: #687184;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.vl-ba-disclaimer {
+  max-width: 800px;
+  margin: 28px auto 0;
+  text-align: center;
+  color: #687184;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .vl-before-after-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .vl-before-after {
+    padding: 55px 5%;
+  }
+}
+
+@media (max-width: 420px) {
+  .vl-before-after-grid {
+    gap: 10px;
+  }
+
+  .vl-ba-card h3 {
+    margin: 12px 10px 6px;
+    font-size: 15px;
+  }
+
+  .vl-ba-card p {
+    margin: 0 10px 14px;
+    font-size: 12px;
+  }
+}

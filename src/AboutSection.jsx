@@ -192,6 +192,48 @@ export default function AboutSection() {
         <p className="vl-disclaimer">Product information template: replace ingredient placeholders, pricing and claims with the exact details from your product labels and approved product documentation.</p>
       </div>
 
+      {/* BEFORE & AFTER RESULTS SECTION */}
+      <div className="vl-before-after">
+        <div className="vl-before-after-heading">
+          <span className="vl-eyebrow">REAL SKIN STORIES</span>
+          <h2>Before & <em>After.</em></h2>
+          <p>
+            Explore these skin progress photos shared for product
+            reference. Individual experiences may vary.
+          </p>
+        </div>
+
+        <div className="vl-before-after-grid">
+          {[
+            { id: "Patient 1", image: "./ba1.jpg" },
+            { id: "Patient 2", image: "./ba2.jpg" },
+            { id: "Patient 3", image: "./ba3.jpg" },
+            { id: "Patient 4", image: "./ba4.jpg" }
+          ].map((item) => (
+            <article className="vl-ba-card" key={item.id}>
+              <div className="vl-ba-image">
+                <img
+                  src={item.image}
+                  alt={`Before and after skin progress ${item.id}`}
+                  loading="lazy"
+                />
+                <span className="vl-ba-label">
+                  {item.id}
+                </span>
+              </div>
+              <h3>{item.id.replace("BA", "Result ")}</h3>
+              <p>Individual results and experiences may vary.</p>
+            </article>
+          ))}
+        </div>
+
+        <p className="vl-ba-disclaimer">
+          Photos are for illustrative purposes. Results vary by individual.
+          Follow product directions and consult a qualified professional
+          for skin concerns.
+        </p>
+      </div>
+
       <div className="vl-benefits-section">
         <div className="vl-benefit-heading"><span className="vl-eyebrow">CARE, MADE CONSIDERED</span><h2>Small steps. <em>Beautiful rituals.</em></h2><p>Explore the role each product can play in a simple routine.</p></div>
         <div className="vl-benefit-cards">

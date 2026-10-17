@@ -102,3 +102,279 @@
     gap: 12px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== VELOURE LUX FESTIVAL OFFER CAROUSEL ===== */
+
+.festival-carousel {
+  position: relative;
+  width: 100%;
+  height: clamp(280px, 38vw, 460px);
+  margin: 0 0 40px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #172947;
+  color: #ffffff;
+  isolation: isolate;
+}
+
+.festival-carousel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  z-index: -2;
+  animation: festivalImageFade 0.6s ease;
+}
+
+.festival-carousel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(16, 30, 53, 0.88) 0%,
+    rgba(16, 30, 53, 0.56) 48%,
+    rgba(16, 30, 53, 0.08) 100%
+  );
+  pointer-events: none;
+}
+
+.festival-carousel-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(24px, 6vw, 76px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.festival-carousel-overlay > span {
+  color: #f4c1d5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.festival-carousel-overlay h2 {
+  margin: 14px 0 10px;
+  color: #ffffff;
+  font-size: clamp(34px, 5vw, 60px);
+  line-height: 1.12;
+}
+
+.festival-carousel-overlay h2 em {
+  color: #f1a9c5;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.festival-carousel-overlay p {
+  max-width: 430px;
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.festival-carousel-overlay button {
+  margin-top: 22px;
+  padding: 13px 22px;
+  border: 1px solid #f1a9c5;
+  border-radius: 4px;
+  background: #f1a9c5;
+  color: #172947;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.festival-carousel-overlay button:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #172947;
+}
+
+/* Previous and next arrows */
+.festival-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 48px;
+  padding: 0;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #172947;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.festival-arrow:hover {
+  background: #f1a9c5;
+}
+
+.festival-prev {
+  left: 14px;
+}
+
+.festival-next {
+  right: 14px;
+}
+
+/* Carousel navigation dots */
+.festival-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 17px;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  transform: translateX(-50%);
+}
+
+.festival-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.festival-dots button.active {
+  width: 23px;
+  border-radius: 8px;
+  background: #f1a9c5;
+}
+
+/* Slide transition */
+@keyframes festivalImageFade {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .festival-carousel {
+    height: 340px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+
+  .festival-carousel-overlay {
+    padding: 28px;
+  }
+
+  .festival-carousel-overlay h2 {
+    font-size: clamp(32px, 7vw, 44px);
+  }
+
+  .festival-carousel-overlay p {
+    max-width: 320px;
+    font-size: 13px;
+  }
+
+  .festival-arrow {
+    width: 34px;
+    height: 40px;
+    font-size: 25px;
+  }
+
+  .festival-prev {
+    left: 8px;
+  }
+
+  .festival-next {
+    right: 8px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .festival-carousel {
+    height: 300px;
+    border-radius: 10px;
+  }
+
+  .festival-carousel-overlay {
+    padding: 24px 20px;
+  }
+
+  .festival-carousel-overlay > span {
+    font-size: 9px;
+    letter-spacing: 1.3px;
+  }
+
+  .festival-carousel-overlay h2 {
+    margin: 12px 0 8px;
+    font-size: 32px;
+  }
+
+  .festival-carousel-overlay p {
+    max-width: 250px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .festival-carousel-overlay button {
+    margin-top: 16px;
+    padding: 11px 15px;
+    font-size: 10px;
+  }
+
+  .festival-arrow {
+    width: 29px;
+    height: 35px;
+    font-size: 22px;
+  }
+
+  .festival-prev {
+    left: 5px;
+  }
+
+  .festival-next {
+    right: 5px;
+  }
+
+  .festival-dots {
+    bottom: 12px;
+  }
+}

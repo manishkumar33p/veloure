@@ -75,6 +75,27 @@ function App(){
 
 
     const [currentSlide, setCurrentSlide] = useState(0);
+    
+
+const [festivalSlide, setFestivalSlide] = useState(0);
+
+const festivalImages = [
+  "/2.jpeg",
+  "/1.jpeg",
+  "/3.jpeg",
+  "/4.jpeg",
+  "/5.jpeg",
+  "/2.jpeg"
+];
+
+useEffect(() => {
+  const timer = setInterval(() => {
+    setFestivalSlide(previous => (previous + 1) % 6);
+  }, 4000);
+
+  return () => clearInterval(timer);
+}, []);
+
 
 useEffect(() => {
   const timer = setInterval(() => {
@@ -309,7 +330,102 @@ const updateOrder = (orderId, changes) => {
 </>}
 
  {page==='Product'&&selectedProduct&&<main className="page-main product-detail-page"><button className="back-link product-back" onClick={()=>goto('Products')}>← Back to products</button><div className="product-detail-layout"><div className="product-detail-image"><img src={selectedProduct.img} alt={selectedProduct.name}/></div><div className="product-detail-copy"><span className="kicker">VELOURE LUXE · {selectedProduct.type}</span><h1>{selectedProduct.name}</h1><p>{selectedProduct.desc}</p><div className="product-detail-price"><strong>{money(selectedProduct.price)}</strong>{selectedProduct.old&&<del>{money(selectedProduct.old)}</del>}{selectedProduct.old>selectedProduct.price&&<span>{Math.round((1-selectedProduct.price/selectedProduct.old)*100)}% OFF</span>}</div><p className="product-detail-description">Thoughtfully selected for your everyday care ritual. Add this product to your bag or share its direct product link.</p><div className="product-detail-actions"><button className="gold-button" onClick={()=>{add(selectedProduct);goto('Bag')}}>BUY NOW <ArrowRight size={16}/></button><button className="outline-button" onClick={()=>add(selectedProduct)}>ADD TO BAG <Plus size={15}/></button><button className="outline-button" onClick={()=>copyProductLink(selectedProduct)}>COPY PRODUCT LINK <MessageCircle size={15}/></button></div><div className="product-detail-note"><Truck size={18}/> Free shipping on orders above ₹999</div></div></div></main>}
- {page==='Products'&&<main className="page-main"><div className="page-title"><span className="kicker">THE VELOURE COLLECTION</span><h1>Our <em>Products</em></h1><p>Thoughtful care for your everyday ritual.</p></div><div className="filters">{['All','Skincare','Haircare','Bodycare'].map(c=><button className={category===c?'selected':''} onClick={()=>setCategory(c)} key={c}>{c==='All'?'All Products':c}</button>)}<span>{filtered.length} products</span></div><div className="product-grid listing">{filtered.map(p=><ProductCard p={p} key={p.id}/>)}</div>{filtered.length===0&&<p className="empty">No products found. Try another search.</p>}</main>}
+ {/* {page==='Products'&&<main className="page-main"><div className="page-title"><span className="kicker">THE VELOURE COLLECTION</span><h1>Our <em>Products</em></h1><p>Thoughtful care for your everyday ritual.</p></div><div className="filters">{['All','Skincare','Haircare','Bodycare'].map(c=><button className={category===c?'selected':''} onClick={()=>setCategory(c)} key={c}>{c==='All'?'All Products':c}</button>)}<span>{filtered.length} products</span></div><div className="product-grid listing">{filtered.map(p=><ProductCard p={p} key={p.id}/>)}</div>{filtered.length===0&&<p className="empty">No products found. Try another search.</p>}</main>} */}
+
+ 
+{page === 'Products' && (
+  <main className="page-main">
+
+    {/* FESTIVAL OFFERS CAROUSEL */}
+    <section className="festival-carousel">
+      <img
+        key={festivalSlide}
+        className="festival-carousel-image"
+        src={festivalImages[festivalSlide]}
+        alt="VELOURE LUX Festival Offers"
+      />
+
+      <div className="festival-carousel-overlay">
+        {/* <span>VELOURE LUX · SPECIAL EDITION</span>
+        <h2>Festival <em>Offers</em></h2>
+        <p>Celebrate every moment with your favourite beauty essentials.</p> */}
+        {/* <button
+          type="button"
+          onClick={() =>
+            document.getElementById('festival-products')?.scrollIntoView({
+              behavior: 'smooth'
+            })
+          }
+        > */}
+          {/* EXPLORE PRODUCTS → */}
+        {/* </button> */}
+      </div>
+
+      <button
+        type="button"
+        className="festival-arrow festival-prev"
+        onClick={() =>
+          setFestivalSlide((festivalSlide - 1 + festivalImages.length) % festivalImages.length)
+        }
+        aria-label="Previous offer"
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        className="festival-arrow festival-next"
+        onClick={() =>
+          setFestivalSlide((festivalSlide + 1) % festivalImages.length)
+        }
+        aria-label="Next offer"
+      >
+        ›
+      </button>
+
+      <div className="festival-dots">
+        {festivalImages.map((image, index) => (
+          <button
+            type="button"
+            key={image}
+            className={index === festivalSlide ? 'active' : ''}
+            onClick={() => setFestivalSlide(index)}
+            aria-label={`Show offer ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <div className="page-title" id="festival-products">
+      <span className="kicker">THE VELOURE COLLECTION</span>
+      <h1>Our <em>Products</em></h1>
+      <p>Thoughtful care for your everyday ritual.</p>
+    </div>
+
+    <div className="filters">
+      {['All', 'Skincare', 'Haircare', 'Bodycare'].map(c => (
+        <button
+          className={category === c ? 'selected' : ''}
+          onClick={() => setCategory(c)}
+          key={c}
+        >
+          {c === 'All' ? 'All Products' : c}
+        </button>
+      ))}
+      <span>{filtered.length} products</span>
+    </div>
+
+    <div className="product-grid listing">
+      {filtered.map(p => <ProductCard p={p} key={p.id} />)}
+    </div>
+
+    {filtered.length === 0 && (
+      <p className="empty">No products found. Try another search.</p>
+    )}
+
+  </main>
+)}
+
  {page==='About Us'&&<main className="page-main"><AboutSection /><div className="page-title"><span className="kicker">OUR PHILOSOPHY</span><h1>Beauty, with <em>intention.</em></h1><p>Premium everyday care, designed around the rituals that make you feel your best.</p></div><div className="about-panel"><div className="about-photo"></div><div><span className="kicker">WELCOME TO VELOURE LUX</span><h2>Everyday care.<br/><em>Elevated.</em></h2><p>We believe self-care should feel considered, calm and personal. VELOURE LUX brings skincare and haircare essentials together in a refined, easy-to-love experience.</p><p>Explore your routine, discover your favourites, and make a little space for yourself every day.</p><button className="gold-button" onClick={()=>goto('Products')}>SHOP THE COLLECTION <ArrowRight size={16}/></button></div></div></main>}
  {page==='Contact'&&<main className="page-main"><div className="page-title"><span className="kicker">WE’RE HERE FOR YOU</span><h1>Let’s <em>connect.</em></h1><p>Questions about products or an order? We’d love to help.</p></div><div className="contact-grid"><div className="contact-card"><MessageCircle/><h3>WhatsApp Support</h3><p>Reach us for product and order enquiries.</p><button className="gold-button" onClick={()=>window.open(`https://wa.me/${waNumber}`,'_blank')}>CHAT WITH US <ArrowRight size={15}/></button></div><div className="contact-card"><Phone/><h3>Call Us</h3><p>Monday – Saturday · 10 AM – 6 PM</p><a href="tel:+919958424916">+91 99584 24916</a></div><div className="contact-card"><Instagram/><h3>Follow Our Journey</h3><p>Care rituals, new arrivals and more.</p><button className="outline-button" onClick={()=>notify('Add your Instagram profile link in src/main.jsx')}>FOLLOW US <ArrowRight size={15}/></button></div></div></main>}
  {page==='Bag'&&<main className="page-main"><div className="page-title"><span className="kicker">YOUR VELOURE EDIT</span><h1>Shopping <em>Bag</em></h1></div>{!checkout?<div className="bag-layout"><div className="bag-list">{cart.length===0?<div className="empty-bag"><ShoppingBag size={38}/><h2>Your bag is waiting.</h2><p>Add something lovely to your daily ritual.</p><button className="gold-button" onClick={()=>goto('Products')}>EXPLORE PRODUCTS <ArrowRight size={15}/></button></div>:cart.map(x=><div className="bag-item" key={x.id}><img src={x.img}/><div className="bag-detail"><span className="product-type">{x.type}</span><h3>{x.name}</h3><b>{money(x.price)}</b><div className="quantity"><button onClick={()=>qty(x.id,-1)}><Minus size={13}/></button><span>{x.qty}</span><button onClick={()=>qty(x.id,1)}><Plus size={13}/></button></div></div><button className="remove" onClick={()=>qty(x.id,-x.qty)}><Trash2 size={17}/></button></div>)}</div>{cart.length>0&&<aside className="summary"><h3>Order Summary</h3><div><span>Subtotal</span><b>{money(total)}</b></div><div><span>Shipping</span><b>{total>=999?'FREE':'Calculated on order'}</b></div><div className="summary-total"><span>Total</span><b>{money(total+(total>=999?0:79))}</b></div><p>Shipping ₹79 for orders below ₹999.</p><button className="gold-button full" onClick={()=>setCheckout(true)}>PROCEED TO CHECKOUT <ArrowRight size={16}/></button></aside>}</div>:<div className="checkout-layout"><form className="checkout-form" onSubmit={placeOrder}><h2>Delivery details</h2><p>Submit your order details to continue on WhatsApp.</p><label>Full name<input name="name" required placeholder="Your full name"/></label><label>Phone number<input name="phone" required pattern="[0-9+() -]{8,}" placeholder="Your phone number"/></label><label>Delivery address<textarea name="address" required rows="3" placeholder="House, street, city, state, PIN code"/></label><div className="checkout-total"><span>Order total</span><b>{money(total+(total>=999?0:79))}</b></div><button className="gold-button full" type="submit">CONTINUE ON WHATSAPP <MessageCircle size={16}/></button><button type="button" className="back-link" onClick={()=>setCheckout(false)}>← Back to bag</button></form></div>}</main>}
