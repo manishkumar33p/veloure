@@ -6,7 +6,7 @@ const products = [
     name: "Velvet Repair Hair Oil",
     category: "HAIR RITUAL",
     description: "A rich finishing oil designed to leave hair looking glossy, smooth and beautifully cared for.",
-    image: "/p4.jpeg",
+    image: "/p3.jpeg",
     price: "Add your price",
     details: "A lightweight-to-rich oil ritual for lengths and ends. Start with a few drops and adjust to your hair length and texture.",
     ingredients: "Add your verified ingredient list here",
@@ -17,7 +17,7 @@ const products = [
     name: "Radiance Face Cream",
     category: "DAILY SKINCARE",
     description: "A comforting moisturiser for skin that feels soft, supple and cared for.",
-    image: "/p1.jpeg",
+    image: "/p7.jpeg",
     price: "Add your price",
     details: "A daily cream step that helps support a comfortable, moisturised skin feel. Choose a texture suited to your skin type.",
     ingredients: "Add your verified ingredient list here",
@@ -39,7 +39,7 @@ const products = [
     name: "Daily Glow Sunscreen",
     category: "DAILY ESSENTIAL",
     description: "A daily sun-care step to help protect skin when used as directed.",
-    image: "/p3.jpeg",
+    image: "/p4.jpeg",
     price: "Add your price",
     details: "Sun protection belongs at the end of the morning skincare routine. The exact SPF and protection claims must match the product label.",
     ingredients: "Add your verified ingredient list here",
@@ -50,7 +50,7 @@ const products = [
     name: "Nourishing Hair Mask",
     category: "WEEKLY HAIRCARE",
     description: "A weekly care step for hair that feels softer and easier to manage.",
-    image: "/p5.jpeg",
+    image: "/p1.jpeg",
     price: "Add your price",
     details: "A conditioning treatment for lengths and ends. Adapt the frequency to the actual formula and your hair's needs.",
     ingredients: "Add your verified ingredient list here",
@@ -71,9 +71,9 @@ const products = [
 ];
 
 const testimonials = [
-  { name: "Customer story", initials: "VL", product: "Replace with a verified review", quote: "Add genuine customer feedback here, with permission to publish.", rating: 5 },
-  { name: "Customer story", initials: "VL", product: "Replace with a verified review", quote: "Share an authentic review about the product experience.", rating: 5 },
-  { name: "Customer story", initials: "VL", product: "Replace with a verified review", quote: "Use customer-approved words rather than a sample testimonial.", rating: 5 }
+  { name: "Ritu", initials: "VL", product: "Replace with a verified review", quote: "“Loved the premium feel ✨ Beautiful presentation and a very nice shopping experience!”", rating: 5 },
+  { name: "Sneha", initials: "VL", product: "Replace with a verified review", quote: "“Website ka experience smooth tha 👍 Product details clear hain aur ordering bhi easy hai.”", rating: 5 },
+  { name: "Aditi", initials: "VL", product: "Replace with a verified review", quote: "“Products ki quality bahut achhi lagi 😊 Packaging bhi premium hai. Overall great experience!”", rating: 5 }
 ];
 
 const routines = [

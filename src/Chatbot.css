@@ -1,0 +1,178 @@
+
+.vl-chatbot {
+  position: fixed;
+  left: 20px;
+  bottom: 22px;
+  z-index: 9999;
+  font-family: inherit;
+}
+
+.vl-chat-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 30px;
+  background: #20170f;
+  color: #e6c18a;
+  box-shadow: 0 5px 24px #0002;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.vl-chat-launcher span {
+  font-size: 13px;
+  color: #fff;
+}
+
+.vl-chat-window {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  height: 490px;
+  max-height: calc(100dvh - 110px);
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid #e6d8c4;
+  border-radius: 16px;
+  background: #fffdf9;
+  box-shadow: 0 12px 40px #0002;
+}
+
+.vl-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 17px;
+  background: #20170f;
+  color: #f0d1a0;
+}
+
+.vl-chat-header strong,
+.vl-chat-header small {
+  display: block;
+}
+
+.vl-chat-header strong {
+  letter-spacing: 1.5px;
+  font-size: 13px;
+}
+
+.vl-chat-header small {
+  margin-top: 5px;
+  color: #eee0ce;
+  font-size: 11px;
+}
+
+.vl-chat-close {
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.vl-chat-messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.vl-chat-message {
+  max-width: 88%;
+  padding: 11px 13px;
+  border-radius: 13px;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.vl-chat-message.bot {
+  align-self: flex-start;
+  background: #f1e8dc;
+  color: #33261b;
+  border-bottom-left-radius: 4px;
+}
+
+.vl-chat-message.user {
+  align-self: flex-end;
+  background: #302218;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.vl-chat-faqs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid #eee5da;
+}
+
+.vl-chat-faqs button {
+  padding: 7px 9px;
+  border: 1px solid #d9c6aa;
+  border-radius: 20px;
+  background: #fff;
+  color: #382719;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.vl-chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #eee5da;
+}
+
+.vl-chat-input input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #ded5ca;
+  border-radius: 8px;
+  outline-color: #b78a4c;
+  font: inherit;
+  font-size: 13px;
+}
+
+.vl-chat-input button {
+  width: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: #20170f;
+  color: #f0d1a0;
+  cursor: pointer;
+}
+
+.vl-chat-whatsapp {
+  margin: 0 12px 12px;
+  padding: 11px;
+  border: 0;
+  border-radius: 8px;
+  background: #246b48;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .vl-chatbot {
+    left: 12px;
+    bottom: 14px;
+  }
+
+  .vl-chat-window {
+    width: calc(100vw - 24px);
+    height: min(490px, calc(100dvh - 95px));
+  }
+}

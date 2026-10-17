@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import Chatbot from "./Chatbot";
 import { Search, UserRound, ShoppingBag, ChevronDown, ChevronRight, ArrowRight, Leaf, FlaskConical, ShieldCheck, Truck, Heart, Menu, X, Plus, Minus, Trash2, Instagram, Phone, MessageCircle, Sparkles } from 'lucide-react';
 import './style.css';
 import AboutSection from "./AboutSection";
@@ -11,13 +12,13 @@ const products = [
  {id:5,name:'Barrier repair glow gel',type:'Haircare',desc:'Nourishing skin care',price:549,old:649,tag:'NATURAL CARE',img:'/p5.jpeg'},
  {id:6,name:'Night Cream for Pigmentation',type:'Bodycare',desc:'Silky everyday moisture',price:499,old:599,tag:'EVERYDAY LUXE',img:'/p6.jpeg'},
  {id:7,name:'V-V-Whitening Cream',type:'Skincare',desc:'Melt away the day',price:749,old:899,tag:'GENTLE',img:'/p7.jpeg'},
- {id:8,name:'Silk Repair Shampoo',type:'Haircare',desc:'Fresh, soft-looking hair',price:649,old:799,tag:'HAIR RITUAL',img:'/p1.jpeg'},
-{id:9,name:'Hydra Boost Moisturizer',type:'Skincare',desc:'Deep hydration cream',price:849,old:999,tag:'POPULAR',img:'/p2.jpeg'},
- {id:10,name:'Glow Drops Serum',type:'Skincare',desc:'Lightweight glow serum',price:999,old:1199,tag:'NEW',img:'/p3.jpeg'},
- {id:11,name:'Nourishing Hair Mask',type:'Haircare',desc:'Repair & softness ritual',price:699,old:899,tag:'TOP RATED',img:'/p4.jpeg'},
- {id:12,name:'Botanical Hair Oil',type:'Haircare',desc:'Nourishing scalp care',price:549,old:649,tag:'NATURAL CARE',img:'/p5.jpeg'},
- {id:13,name:'Velvet Body Lotion',type:'Bodycare',desc:'Silky everyday moisture',price:499,old:599,tag:'EVERYDAY LUXE',img:'/p6.jpeg'},
- {id:14,name:'Gentle Cleansing Balm',type:'Skincare',desc:'Melt away the day',price:749,old:899,tag:'GENTLE',img:'/p7.jpeg'},
+ {id:8,name:'Hair Serum',type:'Haircare',desc:'Strength and Growth',price:599,old:749,tag:'BESTSELLER',img:'/p1.jpeg'},
+ {id:9,name:'Glow with Grace',type:'Skincare',desc:'L-Glutathione with Vitamin C skin whitening & brightening',price:849,old:999,tag:'POPULAR',img:'/p2.jpeg'},
+ {id:10,name:'Onion Hair Oil',type:'Haircare',desc:'For hair fall',price:999,old:1199,tag:'NEW',img:'/p3.jpeg'},
+ {id:11,name:'Glow Shield Sunscreen',type:'Skincare',desc:'Sun protection with glow',price:699,old:899,tag:'TOP RATED',img:'/p4.jpeg'},
+ {id:12,name:'Barrier repair glow gel',type:'Haircare',desc:'Nourishing skin care',price:549,old:649,tag:'NATURAL CARE',img:'/p5.jpeg'},
+ {id:13,name:'Night Cream for Pigmentation',type:'Bodycare',desc:'Silky everyday moisture',price:499,old:599,tag:'EVERYDAY LUXE',img:'/p6.jpeg'},
+ {id:14,name:'V-V-Whitening Cream',type:'Skincare',desc:'Melt away the day',price:749,old:899,tag:'GENTLE',img:'/p7.jpeg'},
  {id:15,name:'Silk Repair Shampoo',type:'Haircare',desc:'Fresh, soft-looking hair',price:649,old:799,tag:'HAIR RITUAL',img:'/p1.jpeg'}
 ];
 
@@ -92,17 +93,68 @@ const previousSlide = () => {
     (previous - 1 + heroSlides.length) % heroSlides.length
   );
 };
- const [cart,setCart]=useState([]),[category,setCategory]=useState('All'),[mobile,setMobile]=useState(false),[search,setSearch]=useState(''),[showSearch,setShowSearch]=useState(false),[checkout,setCheckout]=useState(false),[orders,setOrders]=useState(()=>JSON.parse(localStorage.getItem('veloure_orders')||'[]')),[notice,setNotice]=useState('');
+ const [cart,setCart]=useState([]);
+ const [dashboardLoggedIn, setDashboardLoggedIn] = useState(false);
+const [loginId, setLoginId] = useState('');
+const [loginPassword, setLoginPassword] = useState('');
+
+const [loginError, setLoginError] = useState('');
+const [category, setCategory] = useState('All');
+const [mobile, setMobile] = useState(false);
+const [search, setSearch] = useState('');
+const [showSearch, setShowSearch] = useState(false);
+const [checkout, setCheckout] = useState(false);
+const [orders, setOrders] = useState(() => {
+  try {
+    return JSON.parse(localStorage.getItem('veloure_orders') || '[]');
+  } catch {
+    return [];
+  }
+});
+const [notice, setNotice] = useState('');
+
  const count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+x.price*x.qty,0);
  const filtered=useMemo(()=>catalog.filter(p=>(category==='All'||p.type===category)&&`${p.name} ${p.type}`.toLowerCase().includes(search.toLowerCase())),[catalog,category,search]);
  const notify=t=>{setNotice(t);setTimeout(()=>setNotice(''),2800)};
  const add=p=>{setCart(old=>{let found=old.find(x=>x.id===p.id);return found?old.map(x=>x.id===p.id?{...x,qty:x.qty+1}:x):[...old,{...p,qty:1}]});notify(p.name+' added to bag')};
  const qty=(id,n)=>setCart(old=>old.map(x=>x.id===id?{...x,qty:x.qty+n}:x).filter(x=>x.qty>0));
  const goto=(p)=>{setPage(p);setSelectedProduct(null);setMobile(false);setCheckout(false);if(window.location.pathname!=='/')window.history.pushState({},'', '/');window.scrollTo({top:0,behavior:'smooth'});};
+ const handleDashboardLogin = (e) => {
+  e.preventDefault();
+
+  // Temporary demo login only — secure authentication नहीं है
+  if (
+    loginId === 'admin' &&
+    loginPassword === 'Veloure@2026'
+  ) {
+    setDashboardLoggedIn(true);
+    setLoginError('');
+    setLoginPassword('');
+  } else {
+    setLoginError('Invalid Login ID or Password');
+  }
+};
   const openProduct=(p)=>{setSelectedProduct(p);setPage('Product');setMobile(false);window.history.pushState({},'',`/product/${productSlug(p)}`);window.scrollTo({top:0,behavior:'smooth'});};
   const copyProductLink=(p)=>{const url=`${window.location.origin}/product/${productSlug(p)}`;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>notify('Product link copied')).catch(()=>notify(url));}else notify(url);};
  const waNumber=import.meta.env.VITE_WHATSAPP_NUMBER||'919958424916';
- const placeOrder=e=>{e.preventDefault();let fd=new FormData(e.currentTarget);let order={id:'VL'+Date.now().toString().slice(-7),date:new Date().toLocaleString('en-IN'),name:fd.get('name'),phone:fd.get('phone'),address:fd.get('address'),items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),total,status:'Order inquiry'};let next=[order,...orders];setOrders(next);localStorage.setItem('veloure_orders',JSON.stringify(next));let msg=`Hello VELOURE LUXE, I would like to place an order.\nOrder: ${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\n${order.items.map(i=>`${i.name} x ${i.qty} — ${money(i.price*i.qty)}`).join('\n')}\nTotal: ${money(total)}`;window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');setCart([]);setCheckout(false);goto('Home');notify('Order details prepared for WhatsApp');};
+ const placeOrder=e=>{e.preventDefault();let fd=new FormData(e.currentTarget);let order={id:'VL'+Date.now().toString().slice(-7),date:new Date().toLocaleString('en-IN'),name:fd.get('name'),phone:fd.get('phone'),address:fd.get('address'),items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),total,status:'Order inquiry'};let next=[order,...orders];setOrders(next);localStorage.setItem('veloure_orders',JSON.stringify(next));let msg=`Hello VELOURE LUXE, I would like to place an order.\nOrder: ${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\n${order.items.map(i=>`${i.name} x ${i.qty} — ${money(i.price*i.qty)}`).join('\n')}\nTotal: ${money(total)}`;window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');setCart([]);setCheckout(false);goto('Home');notify('Order details prepared for WhatsApp');};  
+const updateOrder = (orderId, changes) => {
+  setOrders((currentOrders) => {
+    const updated = currentOrders.map((order) =>
+      order.id === orderId
+        ? { ...order, ...changes }
+        : order
+    );
+
+    localStorage.setItem(
+      'veloure_orders',
+      JSON.stringify(updated)
+    );
+
+    return updated;
+  });
+};
+
  const ProductCard=({p})=><article className="product-card" key={p.id}><div className="product-photo" role="link" tabIndex={0} onClick={()=>openProduct(p)} onKeyDown={e=>e.key==='Enter'&&openProduct(p)}><img src={p.img} alt={p.name} loading="lazy"/><span className="product-tag">{p.tag}</span><button className="heart" aria-label="Save product" onClick={e=>{e.stopPropagation();notify('Wishlist coming soon')}}><Heart size={17}/></button><button className="quick-add" onClick={e=>{e.stopPropagation();add(p)}}>ADD TO BAG <Plus size={15}/></button></div><div className="product-info"><div className="product-type">{p.type}</div><h3><button className="product-name-link" onClick={()=>openProduct(p)}>{p.name}</button></h3><p>{p.desc}</p><div className="price-row"><strong>{money(p.price)}</strong><del>{money(p.old)}</del><span>{Math.round((1-p.price/p.old)*100)}% OFF</span></div></div></article>;
  return <><style>{`
 .hero:before{display:none!important}.vl-admin-shell{background:#fff;color:#171717;border:1px solid #e5e5e5;margin:34px 0 0;font-family:'DM Sans',sans-serif}.vl-admin-embedded{margin-top:34px}.vl-admin-top{background:#111;color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center}.vl-admin-brand{color:#fff;text-decoration:none;font-size:20px;letter-spacing:.08em}.vl-admin-brand em{font-style:normal;color:#aaa}.vl-admin-brand small{display:block;font-size:9px;letter-spacing:.2em;color:#bbb;margin-top:4px}.vl-admin-store-link{color:#fff}.vl-admin-main{padding:26px}.vl-admin-heading>span,.vl-admin-form-head>div>span,.vl-admin-list-head>div>span{font-size:10px;letter-spacing:.18em;color:#555}.vl-admin-heading h1,.vl-admin-form h2,.vl-admin-list h2{color:#111;margin:8px 0;font-family:'Playfair Display',serif;font-weight:400}.vl-admin-heading p{color:#666;font-size:13px}.vl-admin-notice{background:#f5f5f5;color:#333;padding:10px;font-size:10px;letter-spacing:.04em}.vl-admin-layout{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.1fr);gap:22px;margin-top:22px}.vl-admin-form,.vl-admin-list{border:1px solid #e4e4e4;background:#fff;padding:20px}.vl-admin-form label{display:block;font-size:11px;color:#333;margin:14px 0}.vl-admin-form input:not([type=file]),.vl-admin-form select,.vl-admin-form textarea{display:block;width:100%;padding:11px;margin-top:7px;border:1px solid #d6d6d6;background:#fff;color:#111;border-radius:0}.vl-admin-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.vl-admin-form-head,.vl-admin-list-head{display:flex;align-items:center;justify-content:space-between}.vl-admin-number,.vl-admin-list-head>b{color:#111;font-size:22px}.vl-admin-upload{border:1px dashed #aaa;padding:18px;text-align:center;background:#fafafa}.vl-admin-upload input{display:block;max-width:100%;margin:0 auto 10px}.vl-admin-upload-icon{font-size:24px;display:block}.vl-admin-upload small,.vl-admin-product-info small,.vl-admin-product-info span{display:block;color:#777;font-size:10px;margin-top:5px}.vl-admin-preview{max-width:100%;height:150px;object-fit:contain;display:block;margin:10px auto}.vl-admin-form-actions,.vl-admin-product-actions{display:flex;gap:8px;flex-wrap:wrap}.vl-admin-save,.vl-admin-cancel,.vl-admin-product-actions button,.vl-admin-copy-link{border:1px solid #111;background:#111;color:#fff;padding:11px 14px;font-size:10px;letter-spacing:.06em}.vl-admin-cancel,.vl-admin-product-actions button:last-child,.vl-admin-copy-link{background:#fff;color:#111}.vl-admin-message{font-size:12px;color:#333;overflow-wrap:anywhere}.vl-admin-empty{text-align:center;padding:40px 18px;color:#555}.vl-admin-product-list{display:grid;gap:10px;margin-top:16px}.vl-admin-product{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;border-top:1px solid #e8e8e8;padding:12px 0}.vl-admin-product>img{width:76px;height:86px;object-fit:cover;background:#f3f3f3}.vl-admin-product-info strong,.vl-admin-product-info b{display:block;margin-top:5px;color:#111}.vl-admin-product-info span{overflow-wrap:anywhere}.vl-admin-product-actions{grid-column:2}.vl-admin-copy-link{padding:7px 10px;margin-top:6px}.vl-admin-footer{background:#111;color:#eee;padding:16px 24px;font-size:10px;display:flex;justify-content:space-between}.product-name-link{border:0;background:none;padding:0;text-align:left;color:inherit;font:inherit;cursor:pointer}.product-detail-page{max-width:1120px}.product-back{margin-bottom:20px}.product-detail-layout{display:grid;grid-template-columns:1fr 1fr;gap:7%;align-items:center}.product-detail-image{background:#f3f3f0;min-height:450px;display:grid;place-items:center}.product-detail-image img{width:100%;height:100%;max-height:580px;object-fit:contain}.product-detail-copy h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(32px,4vw,48px);margin:15px 0}.product-detail-copy>p{color:#666;line-height:1.8;font-size:13px}.product-detail-price{display:flex;align-items:center;gap:12px;margin:22px 0}.product-detail-price strong{font-size:22px}.product-detail-price del{color:#888}.product-detail-price span{font-size:10px;color:#333}.product-detail-actions{display:flex;gap:10px;flex-wrap:wrap}.product-detail-note{display:flex;align-items:center;gap:10px;color:#555;font-size:12px;margin-top:24px}.product-detail-note svg{color:#222}@media(max-width:720px){.vl-admin-main{padding:14px}.vl-admin-layout,.product-detail-layout{grid-template-columns:1fr}.vl-admin-form,.vl-admin-list{padding:14px}.product-detail-image{min-height:280px}.product-detail-actions>*{width:100%}.vl-admin-footer{gap:8px;flex-direction:column}.vl-admin-product{grid-template-columns:64px minmax(0,1fr)}.vl-admin-product>img{width:64px;height:74px}}
@@ -261,9 +313,181 @@ const previousSlide = () => {
  {page==='About Us'&&<main className="page-main"><AboutSection /><div className="page-title"><span className="kicker">OUR PHILOSOPHY</span><h1>Beauty, with <em>intention.</em></h1><p>Premium everyday care, designed around the rituals that make you feel your best.</p></div><div className="about-panel"><div className="about-photo"></div><div><span className="kicker">WELCOME TO VELOURE LUX</span><h2>Everyday care.<br/><em>Elevated.</em></h2><p>We believe self-care should feel considered, calm and personal. VELOURE LUX brings skincare and haircare essentials together in a refined, easy-to-love experience.</p><p>Explore your routine, discover your favourites, and make a little space for yourself every day.</p><button className="gold-button" onClick={()=>goto('Products')}>SHOP THE COLLECTION <ArrowRight size={16}/></button></div></div></main>}
  {page==='Contact'&&<main className="page-main"><div className="page-title"><span className="kicker">WE’RE HERE FOR YOU</span><h1>Let’s <em>connect.</em></h1><p>Questions about products or an order? We’d love to help.</p></div><div className="contact-grid"><div className="contact-card"><MessageCircle/><h3>WhatsApp Support</h3><p>Reach us for product and order enquiries.</p><button className="gold-button" onClick={()=>window.open(`https://wa.me/${waNumber}`,'_blank')}>CHAT WITH US <ArrowRight size={15}/></button></div><div className="contact-card"><Phone/><h3>Call Us</h3><p>Monday – Saturday · 10 AM – 6 PM</p><a href="tel:+919958424916">+91 99584 24916</a></div><div className="contact-card"><Instagram/><h3>Follow Our Journey</h3><p>Care rituals, new arrivals and more.</p><button className="outline-button" onClick={()=>notify('Add your Instagram profile link in src/main.jsx')}>FOLLOW US <ArrowRight size={15}/></button></div></div></main>}
  {page==='Bag'&&<main className="page-main"><div className="page-title"><span className="kicker">YOUR VELOURE EDIT</span><h1>Shopping <em>Bag</em></h1></div>{!checkout?<div className="bag-layout"><div className="bag-list">{cart.length===0?<div className="empty-bag"><ShoppingBag size={38}/><h2>Your bag is waiting.</h2><p>Add something lovely to your daily ritual.</p><button className="gold-button" onClick={()=>goto('Products')}>EXPLORE PRODUCTS <ArrowRight size={15}/></button></div>:cart.map(x=><div className="bag-item" key={x.id}><img src={x.img}/><div className="bag-detail"><span className="product-type">{x.type}</span><h3>{x.name}</h3><b>{money(x.price)}</b><div className="quantity"><button onClick={()=>qty(x.id,-1)}><Minus size={13}/></button><span>{x.qty}</span><button onClick={()=>qty(x.id,1)}><Plus size={13}/></button></div></div><button className="remove" onClick={()=>qty(x.id,-x.qty)}><Trash2 size={17}/></button></div>)}</div>{cart.length>0&&<aside className="summary"><h3>Order Summary</h3><div><span>Subtotal</span><b>{money(total)}</b></div><div><span>Shipping</span><b>{total>=999?'FREE':'Calculated on order'}</b></div><div className="summary-total"><span>Total</span><b>{money(total+(total>=999?0:79))}</b></div><p>Shipping ₹79 for orders below ₹999.</p><button className="gold-button full" onClick={()=>setCheckout(true)}>PROCEED TO CHECKOUT <ArrowRight size={16}/></button></aside>}</div>:<div className="checkout-layout"><form className="checkout-form" onSubmit={placeOrder}><h2>Delivery details</h2><p>Submit your order details to continue on WhatsApp.</p><label>Full name<input name="name" required placeholder="Your full name"/></label><label>Phone number<input name="phone" required pattern="[0-9+() -]{8,}" placeholder="Your phone number"/></label><label>Delivery address<textarea name="address" required rows="3" placeholder="House, street, city, state, PIN code"/></label><div className="checkout-total"><span>Order total</span><b>{money(total+(total>=999?0:79))}</b></div><button className="gold-button full" type="submit">CONTINUE ON WHATSAPP <MessageCircle size={16}/></button><button type="button" className="back-link" onClick={()=>setCheckout(false)}>← Back to bag</button></form></div>}</main>}
- {page==='Dashboard'&&<main className="page-main"><div className="page-title"><span className="kicker">STORE OVERVIEW</span><h1>Order <em>Dashboard</em></h1><p>Orders and product management</p></div><div className="dashboard-stats"><div><span>Total orders</span><b>{orders.length}</b></div><div><span>Order value</span><b>{money(orders.reduce((s,o)=>s+o.total,0))}</b></div><div><span>Products</span><b>{catalog.length}</b></div></div><div className="orders-table"><h2>Recent orders</h2>{orders.length===0?<p className="empty">No orders yet. Orders started from this browser will appear here.</p>:orders.map(o=><div className="order-row" key={o.id}><div><b>{o.id}</b><small>{o.date}</small></div><div>{o.name}<small>{o.phone}</small></div><div>{o.items.map(i=>`${i.name} × ${i.qty}`).join(', ')}<small>{o.address}</small></div><strong>{money(o.total)}</strong><span className="order-status">{o.status}</span></div>)}</div><AdminProductsPage embedded onProductsChange={()=>setCatalog([...products,...readAdminProducts()])}/></main>}
+ 
+{page === 'Dashboard' && (
+  <main className="page-main dashboard-page">
+    {!dashboardLoggedIn ? (
+      <form
+        className="vl-admin-form dashboard-login"
+        onSubmit={handleDashboardLogin}
+      >
+        <span className="kicker">VELOURE LUXE</span>
+        <h2>Dashboard Login</h2>
+        <p>Enter your credentials to manage your store.</p>
+
+        <label>
+          Login ID
+          <input
+            type="text"
+            value={loginId}
+            onChange={(e) => setLoginId(e.target.value)}
+            autoComplete="username"
+            required
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </label>
+
+        {loginError && (
+          <p className="dashboard-login-error">{loginError}</p>
+        )}
+
+        <button className="vl-admin-save" type="submit">
+          LOGIN
+        </button>
+      </form>
+    ) : (
+      <>
+        <div className="page-title">
+          <span className="kicker">STORE OVERVIEW</span>
+          <h1>Order <em>Dashboard</em></h1>
+          <p>Orders and product management</p>
+          <button
+            className="outline-button"
+            onClick={() => {
+              setDashboardLoggedIn(false);
+              setLoginId('');
+              setLoginPassword('');
+              setLoginError('');
+            }}
+          >
+            LOG OUT
+          </button>
+        </div>
+
+        <div className="dashboard-stats">
+          <div>
+            <span>Total orders</span>
+            <b>{orders.length}</b>
+          </div>
+          <div>
+            <span>Order value</span>
+            <b>
+              {money(
+                orders.reduce((sum, order) => sum + Number(order.total || 0), 0)
+              )}
+            </b>
+          </div>
+          <div>
+            <span>Products</span>
+            <b>{catalog.length}</b>
+          </div>
+        </div>
+
+        <div className="orders-table">
+          <h2>Recent orders</h2>
+
+          {orders.length === 0 ? (
+            <p className="empty">No orders yet.</p>
+          ) : (
+            orders.map((order) => (
+              <div className="order-row" key={order.id}>
+                <div>
+                  <b>{order.id}</b>
+                  <small>{order.date}</small>
+                </div>
+
+                <div>
+                  {order.name}
+                  <small>{order.phone}</small>
+                </div>
+
+                <div>
+                  {order.items?.map((item, index) => (
+                    <span key={`${order.id}-${index}`}>
+                      {item.name} × {item.qty}
+                      {index < order.items.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                  <small>{order.address}</small>
+                </div>
+
+                <strong>{money(order.total)}</strong>
+
+                <div className="dashboard-order-controls">
+                  <label>
+                    Order Status
+                    <select
+                      value={order.status || 'New Inquiry'}
+                      onChange={(e) =>
+                        updateOrder(order.id, { status: e.target.value })
+                      }
+                    >
+                      {[
+                        'New Inquiry',
+                        'Contacted',
+                        'Confirmed',
+                        'Processing',
+                        'Shipped',
+                        'Delivered',
+                        'Cancelled',
+                      ].map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label>
+                    Internal Notes
+                    <textarea
+                      rows={2}
+                      placeholder="Call back, payment pending..."
+                      value={order.notes || ''}
+                      onChange={(e) =>
+                        updateOrder(order.id, { notes: e.target.value })
+                      }
+                    />
+                  </label>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <AdminProductsPage
+          embedded
+          onProductsChange={() =>
+            setCatalog([...products, ...readAdminProducts()])
+          }
+        />
+      </>
+    )}
+  </main>
+)}
+
  <footer className="footer"><div className="footer-main"><div className="footer-brand"><button className="brand" onClick={()=>goto('Home')}><span className="brand-mark">V</span><span><b>VELOURE LUX</b><small>SKINCARE · HAIRCARE · WELLNESS</small></span></button><p>Thoughtful skincare and haircare for your everyday moments of luxury.</p><div className="socials"><button onClick={()=>notify('Add your Instagram link to connect this button')}><Instagram/></button><button onClick={()=>window.open(`https://wa.me/${waNumber}`,'_blank')}><MessageCircle/></button></div></div><div><h4>EXPLORE</h4><button onClick={()=>goto('About Us')}>Our Story</button><button onClick={()=>goto('Products')}>All Products</button><button onClick={()=>goto('Contact')}>Contact Us</button></div><div><h4>SHOP BY</h4>{['Skincare','Haircare','Bodycare'].map(c=><button key={c} onClick={()=>{setCategory(c);goto('Products')}}>{c}</button>)}</div><div><h4>NEED HELP?</h4><button onClick={()=>goto('Contact')}>Contact & Support</button><button onClick={()=>goto('Bag')}>Shipping & Orders</button><button onClick={()=>goto('Dashboard')}>Order Dashboard</button></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} VELOURE LUX. All rights reserved.</span><span>MADE WITH CARE · DESIGNED FOR YOUR RITUAL</span></div></footer>
- <button className="floating-wa" aria-label="WhatsApp" onClick={()=>window.open(`https://wa.me/${waNumber}`,'_blank')}><MessageCircle/></button>{notice&&<div className="toast">{notice}</div>}</>;
+<button
+  className="floating-wa"
+  aria-label="WhatsApp"
+  onClick={() => window.open(`https://wa.me/${waNumber}`, "_blank")}
+>
+  <MessageCircle />
+</button>
+
+<Chatbot />
+{notice && <div className="toast">{notice}</div>}
+</>;
 }
 
 
@@ -273,7 +497,7 @@ function AdminProductsPage({embedded=false,onProductsChange}){
   const [form,setForm]=useState(empty); const [editing,setEditing]=useState(null); const [message,setMessage]=useState('');
   const saveItems=(next)=>{setItems(next);try{localStorage.setItem('veloure_admin_products',JSON.stringify(next));window.dispatchEvent(new Event('veloure-products-updated'));onProductsChange?.();}catch{setMessage('Photo is too large for browser storage. Firebase Storage connection is needed for larger images.')}};
   const change=(e)=>setForm({...form,[e.target.name]:e.target.value});
-  const photo=(e)=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){setMessage('Please choose an image file.');return}if(file.size>1200000){setMessage('For this temporary demo, choose an image under 1.2 MB. Firebase Storage will remove this limitation later.');return}const reader=new FileReader();reader.onload=()=>setForm(f=>({...f,img:String(reader.result)}));reader.readAsDataURL(file)};
+  const photo=(e)=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){setMessage('Please choose an image file.');return}if(file.size>1200000){setMessage('For this temporary demo, choose an image under 1.2 MB. Firebase Storage will remove this limitation later.');return}const reader=new FileReader();reader.onload=()=>setForm(f=>({...f,img:String(reader.result)}));reader.readAsDataURL(file)}; 
   const submit=(e)=>{e.preventDefault();if(!form.name.trim()||form.price===''||!form.img){setMessage('Product name, price and photo are required.');return}const product={...form,id:editing??Date.now(),price:Number(form.price),old:Number(form.old||form.price),img:form.img};const next=editing===null?[product,...items]:items.map(x=>x.id===editing?product:x);saveItems(next);setForm(empty);setEditing(null);setMessage('Product saved in this browser demo. Firebase connection will be added later.');};
   const edit=(item)=>{setForm({...item,price:String(item.price),old:String(item.old)});setEditing(item.id);window.scrollTo({top:0,behavior:'smooth'});};
   const remove=(id)=>{if(window.confirm('Delete this product from the temporary admin list?'))saveItems(items.filter(x=>x.id!==id))};
