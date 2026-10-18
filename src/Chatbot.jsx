@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import "./Chatbot.css";
 
-const WHATSAPP_NUMBER = "919958424916";
+const WHATSAPP_NUMBER = "91999951538";
 
 const FAQS = [
   {

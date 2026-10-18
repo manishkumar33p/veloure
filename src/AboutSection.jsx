@@ -71,9 +71,9 @@ const products = [
 ];
 
 const testimonials = [
-  { name: "Ritu", initials: "VL", product: "Replace with a verified review", quote: "“Loved the premium feel ✨ Beautiful presentation and a very nice shopping experience!”", rating: 5 },
-  { name: "Sneha", initials: "VL", product: "Replace with a verified review", quote: "“Website ka experience smooth tha 👍 Product details clear hain aur ordering bhi easy hai.”", rating: 5 },
-  { name: "Aditi", initials: "VL", product: "Replace with a verified review", quote: "“Products ki quality bahut achhi lagi 😊 Packaging bhi premium hai. Overall great experience!”", rating: 5 }
+  { name: "Ritu", initials: "VL", product: "5 ★★★★★", quote: "“Loved the premium feel ✨ Beautiful presentation and a very nice shopping experience!”", rating: 5 },
+  { name: "Sneha", initials: "VL", product: "5 ★★★★★", quote: "“Website ka experience smooth tha 👍 Product details clear hain aur ordering bhi easy hai.”", rating: 5 },
+  { name: "Aditi", initials: "VL", product: "5 ★★★★★", quote: "“Products ki quality bahut achhi lagi 😊 Packaging bhi premium hai. Overall great experience!”", rating: 5 }
 ];
 
 const routines = [
