@@ -4,6 +4,21 @@ import Chatbot from "./Chatbot";
 import { Search, UserRound, ShoppingBag, ChevronDown, ChevronRight, ArrowRight, Leaf, FlaskConical, ShieldCheck, Truck, Heart, Menu, X, Plus, Minus, Trash2, Instagram, Phone, MessageCircle, Sparkles } from 'lucide-react';
 import './style.css';
 import AboutSection from "./AboutSection";
+import { auth } from "./firebase";
+
+import { db } from "./firebase";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  doc,
+  updateDoc
+} from "firebase/firestore";
+
+import {
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
 const products = [
  {id:1,name:'Hair Serum',type:'Haircare',desc:'Strength and Growth',price:1599,old:2749,tag:'BESTSELLER',img:'/p1.jpeg'},
  {id:2,name:'Glow with Grace',type:'Skincare',desc:'L-Glutathione with Vitamin C skin whitening & brightening',price:2499,old:2999,tag:'POPULAR',img:'/p2.jpeg'},
@@ -59,7 +74,30 @@ function App(){
     const match=window.location.pathname.match(/^\/product\/(.+)$/);
     return match ? [...products,...readAdminProducts()].find(p=>productSlug(p)===match[1]) || null : null;
   });
-  const [page,setPage]=useState(()=>window.location.pathname.startsWith('/product/')?'Product':'Home');
+  // const [page,setPage]=useState(()=>window.location.pathname.startsWith('/product/')?'Product':'Home');
+ 
+const getPageFromPath = () => {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+
+  if (path.startsWith("/product/")) return "Product";
+
+  const pathPages = {
+    "/": "Home",
+    "/home": "Home",
+    "/products": "Products",
+    "/about": "About",
+    "/contact": "Contact",
+    "/bag": "Bag",
+    "/dashboard": "Dashboard",
+    "/offers": "Offers"
+  };
+
+  return pathPages[path] || "Home";
+};
+
+const [page, setPage] = useState(getPageFromPath);
+
+ 
   useEffect(()=>{
     const refresh=()=>setCatalog([...products,...readAdminProducts()]);
     const onPop=()=>{
@@ -134,47 +172,248 @@ const [orders, setOrders] = useState(() => {
 });
 const [notice, setNotice] = useState('');
 
+useEffect(() => {
+  if (!dashboardLoggedIn) return;
+
+  const unsubscribe = onSnapshot(
+    collection(db, "orders"),
+    (snapshot) => {
+      const firebaseOrders = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        firestoreId: doc.id
+      }));
+
+      setOrders(firebaseOrders);
+    },
+    (error) => {
+      console.error("Firebase orders error:", error);
+      setNotice("Orders load nahi hue. Firebase Rules check karein.");
+    }
+  );
+
+  return () => unsubscribe();
+}, [dashboardLoggedIn]);
+
+
+const customerLeads = useMemo(() => {
+  const uniqueCustomers = new Map();
+
+  orders.forEach((order) => {
+    const phone = String(order.phone || "").trim();
+
+    if (!phone) return;
+
+    const key = phone.replace(/[\s()-]/g, "");
+
+    if (!uniqueCustomers.has(key)) {
+      uniqueCustomers.set(key, {
+        name: order.name || "Customer",
+        phone,
+        address: order.address || "",
+        email: order.email || "",
+        lastOrderDate: order.date || "",
+        orderCount: 1,
+        totalSpent: Number(order.total || 0),
+      });
+    } else {
+      const customer = uniqueCustomers.get(key);
+      customer.orderCount += 1;
+      customer.totalSpent += Number(order.total || 0);
+      customer.lastOrderDate = order.date || customer.lastOrderDate;
+    }
+  });
+
+  return Array.from(uniqueCustomers.values());
+}, [orders]);
+
  const count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+x.price*x.qty,0);
  const filtered=useMemo(()=>catalog.filter(p=>(category==='All'||p.type===category)&&`${p.name} ${p.type}`.toLowerCase().includes(search.toLowerCase())),[catalog,category,search]);
  const notify=t=>{setNotice(t);setTimeout(()=>setNotice(''),2800)};
  const add=p=>{setCart(old=>{let found=old.find(x=>x.id===p.id);return found?old.map(x=>x.id===p.id?{...x,qty:x.qty+1}:x):[...old,{...p,qty:1}]});notify(p.name+' added to bag')};
  const qty=(id,n)=>setCart(old=>old.map(x=>x.id===id?{...x,qty:x.qty+n}:x).filter(x=>x.qty>0));
- const goto=(p)=>{setPage(p);setSelectedProduct(null);setMobile(false);setCheckout(false);if(window.location.pathname!=='/')window.history.pushState({},'', '/');window.scrollTo({top:0,behavior:'smooth'});};
- const handleDashboardLogin = (e) => {
-  e.preventDefault();
+//  const goto=(p)=>{setPage(p);setSelectedProduct(null);setMobile(false);setCheckout(false);if(window.location.pathname!=='/')window.history.pushState({},'', '/');window.scrollTo({top:0,behavior:'smooth'});};
 
-  // Temporary demo login only — secure authentication नहीं है
-  if (
-    loginId === 'admin' &&
-    loginPassword === 'Veloure@2026'
-  ) {
+
+const pagePaths = {
+  Home: "/",
+  Products: "/products",
+  About: "/about",
+  Contact: "/contact",
+  Bag: "/bag",
+  Dashboard: "/dashboard",
+  Offers: "/offers"
+};
+
+const goto = (p) => {
+  setPage(p);
+  setSelectedProduct(null);
+  setMobile(false);
+  setCheckout(false);
+
+  const nextPath = pagePaths[p] || "/";
+
+  if (window.location.pathname !== nextPath) {
+    window.history.pushState({}, "", nextPath);
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+
+ //  const handleDashboardLogin = (e) => {
+//   e.preventDefault();
+
+ 
+//   if (
+//     loginId === 'admin' &&
+//     loginPassword === 'Veloure@2026'
+//   ) {
+//     setDashboardLoggedIn(true);
+//     setLoginError('');
+//     setLoginPassword('');
+//   } else {
+//     setLoginError('Invalid Login ID or Password');
+//   }
+// };
+
+const handleDashboardLogin = async (e) => {
+  e.preventDefault();
+  setLoginError("");
+
+  try {
+    const result = await signInWithEmailAndPassword(
+      auth,
+      loginId.trim(),
+      loginPassword
+    );
+
+    if (result.user.uid !== "4IIUjtFStaQdDJWTXRbIhDkAeP73") {
+      await signOut(auth);
+      setDashboardLoggedIn(false);
+      setLoginError("You are not authorized to access this dashboard.");
+      return;
+    }
+
     setDashboardLoggedIn(true);
-    setLoginError('');
-    setLoginPassword('');
-  } else {
-    setLoginError('Invalid Login ID or Password');
+    setLoginPassword("");
+  } catch (error) {
+    console.error("Firebase login error:", error);
+    setLoginError("Login failed. Please check your email and password.");
   }
 };
   const openProduct=(p)=>{setSelectedProduct(p);setPage('Product');setMobile(false);window.history.pushState({},'',`/product/${productSlug(p)}`);window.scrollTo({top:0,behavior:'smooth'});};
   const copyProductLink=(p)=>{const url=`${window.location.origin}/product/${productSlug(p)}`;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>notify('Product link copied')).catch(()=>notify(url));}else notify(url);};
  const waNumber=import.meta.env.VITE_WHATSAPP_NUMBER||'919999514538';
- const placeOrder=e=>{e.preventDefault();let fd=new FormData(e.currentTarget);let order={id:'VL'+Date.now().toString().slice(-7),date:new Date().toLocaleString('en-IN'),name:fd.get('name'),phone:fd.get('phone'),address:fd.get('address'),items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),total,status:'Order inquiry'};let next=[order,...orders];setOrders(next);localStorage.setItem('veloure_orders',JSON.stringify(next));let msg=`Hello VELOURE LUXE, I would like to place an order.\nOrder: ${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\n${order.items.map(i=>`${i.name} x ${i.qty} — ${money(i.price*i.qty)}`).join('\n')}\nTotal: ${money(total)}`;window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');setCart([]);setCheckout(false);goto('Home');notify('Order details prepared for WhatsApp');};  
-const updateOrder = (orderId, changes) => {
-  setOrders((currentOrders) => {
-    const updated = currentOrders.map((order) =>
-      order.id === orderId
-        ? { ...order, ...changes }
-        : order
+//  const placeOrder=e=>{e.preventDefault();let fd=new FormData(e.currentTarget);let order={id:'VL'+Date.now().toString().slice(-7),date:new Date().toLocaleString('en-IN'),name:fd.get('name'),phone:fd.get('phone'),address:fd.get('address'),items:cart.map(x=>({name:x.name,qty:x.qty,price:x.price})),total,status:'Order inquiry'};let next=[order,...orders];setOrders(next);localStorage.setItem('veloure_orders',JSON.stringify(next));let msg=`Hello VELOURE LUXE, I would like to place an order.\nOrder: ${order.id}\nName: ${order.name}\nPhone: ${order.phone}\nAddress: ${order.address}\n${order.items.map(i=>`${i.name} x ${i.qty} — ${money(i.price*i.qty)}`).join('\n')}\nTotal: ${money(total)}`;window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');setCart([]);setCheckout(false);goto('Home');notify('Order details prepared for WhatsApp');};  
+
+const placeOrder = async (e) => {
+  e.preventDefault();
+
+  const fd = new FormData(e.currentTarget);
+
+  const order = {
+    id: 'VL' + Date.now().toString().slice(-7),
+    date: new Date().toLocaleString('en-IN'),
+    name: String(fd.get('name') || ''),
+    phone: String(fd.get('phone') || ''),
+    address: String(fd.get('address') || ''),
+    items: cart.map((x) => ({
+      name: x.name,
+      qty: x.qty,
+      price: x.price
+    })),
+    total: total + (total >= 999 ? 0 : 79),
+    status: 'Order inquiry'
+  };
+
+  try {
+    await addDoc(collection(db, 'orders'), order);
+
+    const next = [order, ...orders];
+    setOrders(next);
+    localStorage.setItem('veloure_orders', JSON.stringify(next));
+
+    const msg = `Hello VELOURE LUX, I would like to place an order.
+Order: ${order.id}
+Name: ${order.name}
+Phone: ${order.phone}
+Address: ${order.address}
+${order.items.map((i) => `${i.name} x ${i.qty} — ${money(i.price * i.qty)}`).join('\n')}
+Total: ${money(order.total)}`;
+
+    window.open(
+      `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,
+      '_blank'
     );
 
-    localStorage.setItem(
-      'veloure_orders',
-      JSON.stringify(updated)
-    );
-
-    return updated;
-  });
+    setCart([]);
+    setCheckout(false);
+    goto('Home');
+    notify('Order saved successfully!');
+  } catch (error) {
+    console.error('Firebase order save error:', error);
+    notify('Order save nahi hua. Firebase Rules check karein.');
+  }
 };
+
+
+
+//  const updateOrder = (orderId, changes) => {
+//   setOrders((currentOrders) => {
+//     const updated = currentOrders.map((order) =>
+//       order.id === orderId
+//         ? { ...order, ...changes }
+//         : order
+//     );
+
+//     localStorage.setItem(
+//       'veloure_orders',
+//       JSON.stringify(updated)
+//     );
+
+//     return updated;
+//   });
+// };
+
+
+const updateOrder = async (orderId, changes) => {
+  const orderToUpdate = orders.find(
+    (order) => order.id === orderId
+  );
+
+  if (!orderToUpdate?.firestoreId) {
+    notify('Order Firebase se link nahi hua. Dashboard refresh karke try karein.');
+    return;
+  }
+
+  try {
+    await updateDoc(
+      doc(db, 'orders', orderToUpdate.firestoreId),
+      changes
+    );
+
+    setOrders((currentOrders) => {
+      const updated = currentOrders.map((order) =>
+        order.id === orderId
+          ? { ...order, ...changes }
+          : order
+      );
+
+      localStorage.setItem(
+        'veloure_orders',
+        JSON.stringify(updated)
+      );
+
+      return updated;
+    });
+
+    notify('Order status updated successfully!');
+  } catch (error) {
+    console.error('Firebase order update error:', error);
+    notify('Order update nahi hua. Firebase Rules check karein.');
+  }
+};
+
 
  const ProductCard=({p})=><article className="product-card" key={p.id}><div className="product-photo" role="link" tabIndex={0} onClick={()=>openProduct(p)} onKeyDown={e=>e.key==='Enter'&&openProduct(p)}><img src={p.img} alt={p.name} loading="lazy"/><span className="product-tag">{p.tag}</span><button className="heart" aria-label="Save product" onClick={e=>{e.stopPropagation();notify('Wishlist coming soon')}}><Heart size={17}/></button><button className="quick-add" onClick={e=>{e.stopPropagation();add(p)}}>ADD TO BAG <Plus size={15}/></button></div><div className="product-info"><div className="product-type">{p.type}</div><h3><button className="product-name-link" onClick={()=>openProduct(p)}>{p.name}</button></h3><p>{p.desc}</p><div className="price-row"><strong>{money(p.price)}</strong><del>{money(p.old)}</del><span>{Math.round((1-p.price/p.old)*100)}% OFF</span></div></div></article>;
  return <><style>{`
@@ -580,6 +819,72 @@ const updateOrder = (orderId, changes) => {
             ))
           )}
         </div>
+
+        
+<div className="orders-table">
+  <h2>Customer Leads</h2>
+  <p>Customers who have placed orders through checkout.</p>
+
+  <div className="dashboard-stats">
+    <div>
+      <span>Total customers</span>
+      <b>{customerLeads.length}</b>
+    </div>
+
+    <div>
+      <span>Total orders from customers</span>
+      <b>
+        {customerLeads.reduce(
+          (sum, customer) => sum + customer.orderCount,
+          0
+        )}
+      </b>
+    </div>
+
+    <div>
+      <span>Total order value</span>
+      <b>
+        {money(
+          customerLeads.reduce(
+            (sum, customer) => sum + customer.totalSpent,
+            0
+          )
+        )}
+      </b>
+    </div>
+  </div>
+
+  {customerLeads.length === 0 ? (
+    <p className="empty">No customer leads yet.</p>
+  ) : (
+    customerLeads.map((customer) => (
+      <div
+        className="order-row"
+        key={customer.phone.replace(/[\s()+-]/g, "")}
+      >
+        <div>
+          <b>{customer.name}</b>
+          <small>{customer.lastOrderDate}</small>
+        </div>
+
+        <div>
+          <a href={`tel:${customer.phone}`}>
+            {customer.phone}
+          </a>
+          {customer.email && <small>{customer.email}</small>}
+        </div>
+
+        <div>
+          <small>{customer.address}</small>
+          <b>{customer.orderCount} order(s)</b>
+        </div>
+
+        <strong>{money(customer.totalSpent)}</strong>
+      </div>
+    ))
+  )}
+</div>
+
 
         <AdminProductsPage
           embedded
