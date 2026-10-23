@@ -82,7 +82,7 @@ const getPageFromPath = () => {
   if (path.startsWith("/product/")) return "Product";
 
   const pathPages = {
-    "/": "Home",
+    "/": "products",
     "/home": "Home",
     "/products": "Products",
     "/about": "About",
